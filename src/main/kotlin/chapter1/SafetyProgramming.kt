@@ -21,6 +21,17 @@ class CreditCard {
 
 class Donut(val price: Int = 10)
 
-class Payment(val creditCard: CreditCard, val amount: Int)
+class Payment(val creditCard: CreditCard, val amount: Int) {
+    /**
+     * 여러 Payment를 하나의 Payment로 합친다.
+     *
+     * @throws IllegalStateException 서로 다른 카드에 대한 Payment를 합치려고 한 경우 발생한다.
+     */
+    fun combine(payment: Payment): Payment =
+        if (creditCard == payment.creditCard)
+            Payment(creditCard, amount + payment.amount)
+        else
+            throw IllegalStateException("Cannot combine payments with different credit cards")
+}
 
 class Purchase(val donut: Donut, val payment: Payment)
