@@ -38,6 +38,16 @@ class Payment(val creditCard: CreditCard, val amount: Int) {
             Payment(creditCard, amount + payment.amount)
         else
             throw IllegalStateException("Cannot combine payments with different credit cards")
+
+    companion object {
+        /**
+         * 여러 Payment 들을 creditCard 별로 합쳐준다.
+         */
+        fun groupByCard(payments: List<Payment>): List<Payment> =
+            payments.groupBy { it.creditCard } // Map<CreditCard, List<Payment>>
+                .values // Collection<List<Payment>>
+                .map { it.reduce(Payment::combine) } // 각 List<Payment>를 Payment로 축약한다.
+    }
 }
 
 class Purchase(val donuts: List<Donut>, val payment: Payment)
