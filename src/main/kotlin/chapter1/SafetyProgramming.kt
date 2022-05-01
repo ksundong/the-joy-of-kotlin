@@ -1,13 +1,15 @@
 package chapter1
 
 /**
+ * 여러 도넛을 한꺼번에 구매한다.
+ *
  * 이 단계에서는 더 이상 신용카드 지급이 어떻게 이뤄지는지를 신경쓰지 않는다.
  */
-fun buyDonut(creditCard: CreditCard): Purchase {
-    val donut = Donut()
-    val payment = Payment(creditCard, donut.price)
-    return Purchase(donut, payment)
-}
+fun buyDonuts(quantity: Int = 1, creditCard: CreditCard): Purchase =
+    Purchase(List(quantity) { // quantity 만큼 init 한다.
+        Donut()
+    }, Payment(creditCard, Donut.price * quantity))
+
 
 class CreditCard {
     /**
@@ -19,7 +21,11 @@ class CreditCard {
     fun charge(price: Int) {}
 }
 
-class Donut(val price: Int = 10)
+class Donut() {
+    companion object {
+        const val price = 10
+    }
+}
 
 class Payment(val creditCard: CreditCard, val amount: Int) {
     /**
@@ -34,4 +40,4 @@ class Payment(val creditCard: CreditCard, val amount: Int) {
             throw IllegalStateException("Cannot combine payments with different credit cards")
 }
 
-class Purchase(val donut: Donut, val payment: Payment)
+class Purchase(val donuts: List<Donut>, val payment: Payment)
